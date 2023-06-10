@@ -7,7 +7,8 @@ body {
   font-size: 16px;
   color: white;
   background-color: black;
-  background-image: url('https://i.pinimg.com/originals/c1/fc/9d/c1fc9d7f6ae08d56f2b84e81799790a5.gif');
+  background-image: url('https://i.pinimg.com/originals/82/f3/3c/82f33c83e658969547fbce1afda7c1b5.gif');
+  /* background-image: url('https://i.pinimg.com/originals/19/6a/d9/196ad9d3122098b297d7b99ce9ff209f.gif'); */
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
@@ -24,6 +25,8 @@ ul {
 
 img {
   display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 ul {
@@ -33,4 +36,8 @@ ul {
 button {
   cursor: pointer;
   outline: none;
+}
+
+body.modal-open {
+  overflow: hidden;
 }
