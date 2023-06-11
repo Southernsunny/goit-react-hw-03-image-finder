@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-// import shortid from 'shortid';
-import { Container } from './App.styled';
-
-import Modal from '../Modal';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { getImages } from 'service/image-service';
+import Modal from 'components/Modal';
 import Searchbar from 'components/Searchbar';
 import ImageGallery from 'components/ImageGallery';
-// import ImageGalleryItem from 'components/ImageGalleryItem';
-import { getImages } from 'service/image-service';
+import Button from 'components/Button';
+import Loader from 'components/Loader';
+import SorryAlert from 'components/SorryAlert';
+
+import { Container, ImgLarge } from './App.styled';
 
 class App extends Component {
   state = {
@@ -14,31 +17,47 @@ class App extends Component {
     page: 1,
     images: [],
     showModal: false,
-
-    // image: null,
-    // loading: false,
+    largeImageURL: '',
+    loading: false,
+    firstSearchCompleted: false,
+    error: null,
   };
 
-  // componentDidMount() {
-  //   this.setState({ loading: true });
-  //   fetch(
-  //     'https://pixabay.com/api/?q=cat&page=1&key=35671692-51ec16839e173ffbc9750b66b&image_type=photo&orientation=horizontal&per_page=12'
-  //   )
-  //     .then(res => res.json())
-  //     .then(image => this.setState({ image }))
-  //     .finally(() => this.setState({ loading: false }));
-  // }
   componentDidUpdate(prevProps, prevState) {
-    const { query } = this.state;
-    if (prevState.query !== query) {
-      getImages(query).then(data => {
-        this.setState({ images: data.hits });
-      });
+    const { query, page } = this.state;
+    if (prevState.query !== query || prevState.page !== page) {
+      this.getPhotos(query, page);
     }
   }
 
-  handleSubmit = query => {
-    this.setState({ query });
+  getPhotos = async (query, page) => {
+    if (!query) return;
+    try {
+      this.setState({ loading: true });
+      const data = await getImages(query, page);
+      this.setState(prevState => ({
+        images: page === 1 ? data.hits : [...prevState.images, ...data.hits],
+        firstSearchCompleted: true,
+        error: data.hits.length === 0 ? 'Не знайдено жодного зображення.' : null,
+      }));
+    } catch (err) {
+      console.log(err);
+      this.setState({ error: 'При отриманні зображень сталася помилка.' });
+    } finally {
+      this.setState({ loading: false });
+    }
+  };
+
+  handleFormSubmit = query => {
+    this.setState({ query, page: 1, images: [], error: null });
+  };
+
+  handleBtnClick = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
+
+  handleImageClick = (largeImageURL, tags) => {
+    this.setState({ largeImageURL, tags, showModal: true });
   };
 
   toggleModal = () => {
@@ -48,35 +67,26 @@ class App extends Component {
   };
 
   render() {
-    const { images,showModal } = this.state;
-    console.log(this.state);
+    const { images, showModal, largeImageURL, tags, loading, firstSearchCompleted, error } =
+      this.state;
+
     return (
       <>
-        {/* <Section> */}
-        <Container>
-          <Searchbar onSubmit={this.handleSubmit} />
-          <ImageGallery images={images} />
-          {/* <div style={{ maxWidth: 1170, padding: 20 }}>
-            {this.state.loading && <h1>loading</h1>}
-            {this.state.image && <div>hi{this.state.image.name}</div>}
-          </div> */}
+        <Searchbar onSubmit={this.handleFormSubmit} />
+        {firstSearchCompleted && (
+          <Container>
+            {error && <SorryAlert images={images} />}
+            <ImageGallery images={images} onImageClick={this.handleImageClick} />
+            {showModal && (
+              <Modal onClose={this.toggleModal}>
+                <ImgLarge src={largeImageURL} alt={tags} loading="lazy" />
+              </Modal>
+            )}
+            {loading ? <Loader /> : images.length > 0 && <Button loadMore={this.handleBtnClick} />}
+          </Container>
+        )}
 
-          <button type="button" onClick={this.toggleModal}>
-            Open
-          </button>
-          {showModal && (
-            <Modal onClose={this.toggleModal}>
-              {/* <button type="button" onClick={this.toggleModal}>
-              Close
-            </button> */}
-              <img
-                src="https://i.pinimg.com/originals/6d/50/ef/6d50efb46f1c5b38714a995c2dc4cddf.gif"
-                alt=""
-              />
-            </Modal>
-          )}
-        </Container>
-        {/* </Section> */}
+        <ToastContainer autoClose={2500} theme="dark" />
       </>
     );
   }

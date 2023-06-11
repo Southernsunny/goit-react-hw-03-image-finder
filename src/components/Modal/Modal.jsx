@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { createPortal } from 'react-dom';
-// import PropTypes from 'prop-types';
-// import shortid from 'shortid';
-// import { AiOutlineUserAdd } from 'react-icons/ai';
+import PropTypes from 'prop-types';
 import { Overlay, ModalContent } from './Modal.styled';
 
 const modalRoot = document.querySelector('#modal-root');
-
 export default class Modal extends Component {
   componentDidMount() {
     document.body.classList.add('modal-open');
@@ -24,7 +21,7 @@ export default class Modal extends Component {
     }
   };
 
-   handleOverlayClick = event => {
+  handleOverlayClick = event => {
     if (event.currentTarget === event.target) {
       this.props.onClose();
     }
@@ -32,10 +29,15 @@ export default class Modal extends Component {
 
   render() {
     return createPortal(
-       <Overlay onClick={this.handleOverlayClick}>
+      <Overlay onClick={this.handleOverlayClick}>
         <ModalContent>{this.props.children}</ModalContent>
       </Overlay>,
       modalRoot
     );
   }
 }
+
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
+};

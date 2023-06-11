@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-// import shortid from 'shortid';
-// import { AiOutlineUserAdd } from 'react-icons/ai';
-// import { Overlay, ModalContent } from './Modal.styled';
+import PropTypes from 'prop-types';
+import { HiOutlineSearch } from 'react-icons/hi';
+import { Header,Form, Input, SearchBtn } from './Searchbar.styled';
+import { toast } from 'react-toastify';
 
 export default class Searchbar extends Component {
   state = {
@@ -10,17 +10,20 @@ export default class Searchbar extends Component {
   };
 
   handleInput = event => {
-    this.setState({ query: event.currentTarget.value.trim() });
+    this.setState({ query: event.currentTarget.value.toLowerCase() });
   };
 
   handleSubmit = event => {
     event.preventDefault();
-
     const { query } = this.state;
-    this.props.onSubmit(query);
-    this.setState({
-      query: '',
-    });
+    const { onSubmit } = this.props;
+
+    if (query.trim() === '') {
+      return toast('☀︎ Write the subject of the picture ☾');
+    }
+
+    onSubmit(query);
+    this.setState({ query: '' });
   };
 
   handleKeyPress = event => {
@@ -32,13 +35,9 @@ export default class Searchbar extends Component {
   render() {
     const { query } = this.state;
     return (
-      <header className="searchbar">
-        <form className="form" onSubmit={this.handleSubmit}>
-          <button type="submit" className="button">
-            <span className="button-label">Search</span>
-          </button>
-
-          <input
+      <Header>
+        <Form className="form" onSubmit={this.handleSubmit}>
+          <Input
             className="input"
             name="search"
             type="text"
@@ -46,10 +45,17 @@ export default class Searchbar extends Component {
             onKeyDown={this.handleKeyPress}
             value={query}
             required
-            placeholder="Search images and photos"
+            placeholder="Search images and photos..."
           />
-        </form>
-      </header>
+          <SearchBtn type="submit" className="button">
+            <HiOutlineSearch size={28} />
+          </SearchBtn>
+        </Form>
+      </Header>
     );
   }
 }
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

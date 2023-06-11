@@ -36,8 +36,10 @@ ul {
 button {
   cursor: pointer;
   outline: none;
+  font-family: inherit;
 }
 
 body.modal-open {
   overflow: hidden;
+  
 }

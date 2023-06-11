@@ -1,41 +1,28 @@
 import React from 'react';
-// import { getImages } from 'service/image-service';
-// import PropTypes from 'prop-types';
-// import shortid from 'shortid';
-// import { AiOutlineUserAdd } from 'react-icons/ai';
-import { GalleryItem,GalleryImg } from './ImageGalleryItem.styled';
+import PropTypes from 'prop-types';
+import { GalleryItem, GalleryImg } from './ImageGalleryItem.styled';
 
+const ImageGalleryItem = ({ item, onImageClick }) => {
+  const { webformatURL, tags, largeImageURL } = item;
 
+  const handleImageClick = () => {
+    onImageClick(largeImageURL, tags);
+  };
 
-const ImageGalleryItem = ({item}) => {
-  const { webformatURL, tags } = item;
   return (
     <GalleryItem>
-      <GalleryImg src={webformatURL} alt={tags} loading="lazy"/>
+      <GalleryImg src={webformatURL} alt={tags} onClick={handleImageClick} loading="lazy" />
     </GalleryItem>
   );
 };
 
+ImageGalleryItem.propTypes = {
+  item: PropTypes.shape({
+    webformatURL: PropTypes.string.isRequired,
+    tags: PropTypes.string.isRequired,
+    largeImageURL: PropTypes.string.isRequired,
+  }).isRequired,
+  onImageClick: PropTypes.func.isRequired,
+};
+
 export default ImageGalleryItem;
-
-// export default class ImageGallery extends Component {
-//   state = {
-//     images: [],
-
-//   };
-
-//   render() {
-//     // const { images } = this.state;
-//     return (
-//       <>
-//         <li class="gallery-item">
-//           {images.map(({ id, src: { webformatURL }, alt: { tags } }) => (
-//             <span key={id}>
-//               <img src={webformatURL} alt={tags} />
-//             </span>
-//           ))}
-//         </li>
-//       </>
-//     );
-//   }
-// }

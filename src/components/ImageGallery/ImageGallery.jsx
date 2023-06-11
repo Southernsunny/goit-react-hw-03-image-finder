@@ -1,21 +1,30 @@
-import ImageGalleryItem from 'components/ImageGalleryItem';
 import React from 'react';
-// import { getImages } from 'service/image-service';
-// import Searchbar from 'components/Searchbar';
-// import PropTypes from 'prop-types';
-// import shortid from 'shortid';
-// import { AiOutlineUserAdd } from 'react-icons/ai';
+import PropTypes from 'prop-types';
+import ImageGalleryItem from 'components/ImageGalleryItem';
 import { Gallery } from './ImageGallery.styled';
 
-
-const ImageGallery = ({images }) => {
+const ImageGallery = ({ images, onImageClick }) => {
   return (
-    <Gallery className="gallery">
-      {images.map((item) => (
-        <ImageGalleryItem key={item.id} item={item} />
-      ))}
-    </Gallery>
+    <>
+      <Gallery className="gallery">
+        {images.map(item => (
+          <ImageGalleryItem key={item.id} item={item} onImageClick={onImageClick} />
+        ))}
+      </Gallery>
+    </>
   );
+};
+
+ImageGallery.propTypes = {
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+      tags: PropTypes.string.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  onImageClick: PropTypes.func.isRequired,
 };
 
 export default ImageGallery;
