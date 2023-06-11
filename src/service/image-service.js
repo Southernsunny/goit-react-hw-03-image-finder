@@ -10,7 +10,7 @@ const params = new URLSearchParams({
 export const getImages = async (query, page) => {
   try {
     const data = await fetch(
-       `${BASE_URL}/?q=${query}&page=${page}&key=${API_KEY}&${params.toString()}`
+      `${BASE_URL}/?q=${query}&page=${page}&key=${API_KEY}&${params.toString()}`
     );
     const response = await data.json();
     return response;

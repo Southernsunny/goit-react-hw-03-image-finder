@@ -8,7 +8,6 @@ import ImageGallery from 'components/ImageGallery';
 import Button from 'components/Button';
 import Loader from 'components/Loader';
 import SorryAlert from 'components/SorryAlert';
-
 import { Container, ImgLarge } from './App.styled';
 
 class App extends Component {
@@ -20,6 +19,7 @@ class App extends Component {
     largeImageURL: '',
     loading: false,
     firstSearchCompleted: false,
+    reachedEnd: false,
     error: null,
   };
 
@@ -35,21 +35,25 @@ class App extends Component {
     try {
       this.setState({ loading: true });
       const data = await getImages(query, page);
-      this.setState(prevState => ({
-        images: page === 1 ? data.hits : [...prevState.images, ...data.hits],
+      const newImages = data.hits;
+      const allImages = page === 1 ? newImages : [...this.state.images, ...newImages];
+      const reachedEnd = newImages.length === 0;
+      this.setState({
+        images: allImages,
         firstSearchCompleted: true,
-        error: data.hits.length === 0 ? 'Не знайдено жодного зображення.' : null,
-      }));
+        error: allImages.length === 0 ? 'No image found.' : null,
+        reachedEnd,
+      });
     } catch (err) {
       console.log(err);
-      this.setState({ error: 'При отриманні зображень сталася помилка.' });
+      this.setState({ error: 'An error occurred while retrieving images.' });
     } finally {
       this.setState({ loading: false });
     }
   };
 
   handleFormSubmit = query => {
-    this.setState({ query, page: 1, images: [], error: null });
+    this.setState({ query, page: 1, images: [], error: null, reachedEnd: false });
   };
 
   handleBtnClick = () => {
@@ -67,8 +71,16 @@ class App extends Component {
   };
 
   render() {
-    const { images, showModal, largeImageURL, tags, loading, firstSearchCompleted, error } =
-      this.state;
+    const {
+      images,
+      showModal,
+      largeImageURL,
+      tags,
+      loading,
+      firstSearchCompleted,
+      reachedEnd,
+      error,
+    } = this.state;
 
     return (
       <>
@@ -82,7 +94,10 @@ class App extends Component {
                 <ImgLarge src={largeImageURL} alt={tags} loading="lazy" />
               </Modal>
             )}
-            {loading ? <Loader /> : images.length > 0 && <Button loadMore={this.handleBtnClick} />}
+            {!reachedEnd && loading && <Loader />}
+            {!reachedEnd && images.length > 0 && !loading && (
+              <Button loadMore={this.handleBtnClick} />
+            )}
           </Container>
         )}
 

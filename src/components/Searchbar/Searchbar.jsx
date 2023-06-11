@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { HiOutlineSearch } from 'react-icons/hi';
-import { Header,Form, Input, SearchBtn } from './Searchbar.styled';
+import { Header, Form, Input, SearchBtn } from './Searchbar.styled';
 import { toast } from 'react-toastify';
 
 export default class Searchbar extends Component {

@@ -29,42 +29,42 @@ export const LoaderIcon = styled.div`
   @keyframes before8 {
     0% {
       width: 0.5em;
-      box-shadow: 1em -0.5em #E6847B, -1em 0.5em rgba(111, 202, 220, 0.75);
+      box-shadow: 1em -0.5em #e6847b, -1em 0.5em rgba(111, 202, 220, 0.75);
     }
 
     35% {
       width: 2.5em;
-      box-shadow: 0 -0.5em #E6847B, 0 0.5em rgba(111, 202, 220, 0.75);
+      box-shadow: 0 -0.5em #e6847b, 0 0.5em rgba(111, 202, 220, 0.75);
     }
 
     70% {
       width: 0.5em;
-      box-shadow: -1em -0.5em #E6847B, 1em 0.5em rgba(111, 202, 220, 0.75);
+      box-shadow: -1em -0.5em #e6847b, 1em 0.5em rgba(111, 202, 220, 0.75);
     }
 
     100% {
-      box-shadow: 1em -0.5em #E6847B, -1em 0.5em rgba(111, 202, 220, 0.75);
+      box-shadow: 1em -0.5em #e6847b, -1em 0.5em rgba(111, 202, 220, 0.75);
     }
   }
 
   @keyframes after6 {
     0% {
       height: 0.5em;
-      box-shadow: 0.5em 1em #75677A, -0.5em -1em #C1BF84;
+      box-shadow: 0.5em 1em #75677a, -0.5em -1em #c1bf84;
     }
 
     35% {
       height: 2.5em;
-      box-shadow: 0.5em 0 #75677A, -0.5em 0 #C1BF84;
+      box-shadow: 0.5em 0 #75677a, -0.5em 0 #c1bf84;
     }
 
     70% {
       height: 0.5em;
-      box-shadow: 0.5em -1em #75677A, -0.5em 1em #C1BF84;
+      box-shadow: 0.5em -1em #75677a, -0.5em 1em #c1bf84;
     }
 
     100% {
-      box-shadow: 0.5em 1em #75677A, -0.5em -1em #C1BF84;
+      box-shadow: 0.5em 1em #75677a, -0.5em -1em #c1bf84;
     }
   }
 `;
