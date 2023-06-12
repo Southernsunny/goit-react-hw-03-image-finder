@@ -34,19 +34,16 @@ class App extends Component {
     if (!query) return;
     try {
       this.setState({ loading: true });
-      const data = await getImages(query, page);
-      const newImages = data.hits;
-      const allImages = page === 1 ? newImages : [...this.state.images, ...newImages];
-      const reachedEnd = newImages.length === 0;
-      this.setState({
-        images: allImages,
+      const { hits, totalHits } = await getImages(query, page);
+      this.setState(prevState => ({
+        images: [...prevState.images, ...hits],
         firstSearchCompleted: true,
-        error: allImages.length === 0 ? 'No image found.' : null,
-        reachedEnd,
-      });
+        error: hits.length === 0 ? 'No image found' : null,
+        reachedEnd: page >= Math.ceil(totalHits / 12),
+      }));
     } catch (err) {
       console.log(err);
-      this.setState({ error: 'An error occurred while retrieving images.' });
+      this.setState({ error: 'An error occurred while retrieving images' });
     } finally {
       this.setState({ loading: false });
     }
